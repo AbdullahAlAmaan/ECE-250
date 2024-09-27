@@ -1,5 +1,4 @@
 #include "PotentialField.hpp"
-#include "PotentialField.cpp"
 #include <iostream>
 
 int main() {
@@ -9,21 +8,25 @@ int main() {
 
     while (std::cin >> command) {
         if (command == "CREATE") {
-            std::cin >> N >> M;
+            std::cin >> N ;
+            std::cin >> M;
             if (pf != nullptr) {
                 delete pf;
             }
-            pf = new PotentialField(N, M);
+            pf = new PotentialField(N, M);  
         }
         else if (command == "POINT") {
             char type;
             int x, y;
-            std::cin >> type >> x >> y;
+            std::cin >> type ;
+            std::cin >> x;
+            std::cin >> y;
             pf->addPoint(type, x, y);
         }
         else if (command == "MOVE") {
             int x, y;
-            std::cin >> x >> y;
+            std::cin >> x;
+            std::cin >> y;
             pf->moveRobot(x, y);
         }
         else if (command == "CLEAR") {
@@ -39,7 +42,6 @@ int main() {
         }
     }
 
-    // Cleanup
     if (pf != nullptr) {
         delete pf;
     }

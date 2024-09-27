@@ -1,19 +1,21 @@
 #ifndef POTENTIAL_FIELD_H
 #define POTENTIAL_FIELD_H
 
-#include <utility>
+class Vector2D {
+    public:
+    double x, y;
+    Vector2D() : x(0), y(0) {} // Initialize to (0,0)
+};
 
 class PotentialField {
-private:
-    int N, M; // Dimensions of the map
-    double K; // Constant for potential calculation
-    std::pair<double, double>** map; // 2D array for potential values
+private:  
+    int N, M;  // Dimensions of the map
+    double K;  // Constant for potential calculation
+    Vector2D** map;  // 2D array for potential values
 
 public:
-    // Constructor: Initialize the map with N x M grid and set all potentials to (0, 0)
+  
     PotentialField(int n, int m);
-
-    // Destructor: Deallocate the dynamically allocated memory
     ~PotentialField();
 
     // Create a new map with different dimensions
@@ -33,3 +35,4 @@ public:
 };
 
 #endif
+
