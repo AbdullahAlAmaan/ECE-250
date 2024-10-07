@@ -2,7 +2,7 @@
 #include <iostream>
 
 Deque::Deque(int init_cap) : capacity(init_cap), size(0), front(0), rear(0) {
-    array = new int[capacity];
+    array = new int[capacity]();
 }
 
 Deque::~Deque() {
@@ -10,11 +10,15 @@ Deque::~Deque() {
 }
 
 void Deque::resize(int new_capacity) {
+    if (new_capacity < 2) {
+        new_capacity = 2; 
+    }
+
     int* new_array = new int[new_capacity];
-    int index = 0;
     for (int i = 0; i < size; ++i) {
         new_array[i] = array[(front + i) % capacity];
     }
+
     delete[] array;
     array = new_array;
     front = 0;
@@ -33,27 +37,34 @@ void Deque::push_back(int item) {
 
 int Deque::pop_front() {
     if (is_empty()) {
-        return -1; // Error, empty deque
+        return -1; 
     }
     int result = array[front];
     front = (front + 1) % capacity;
     size--;
-    if (size > 0 && size <= capacity / 4) {
+
+   
+    if (size > 0 && size <= capacity / 4 && capacity > 2) {
         resize(capacity / 2);
     }
+
     return result;
 }
 
 int Deque::pop_back() {
     if (is_empty()) {
-        return -1; // Error, empty deque
+        return -1; 
     }
     rear = (rear - 1 + capacity) % capacity;
+    int result = array[rear];
     size--;
-    if (size > 0 && size <= capacity / 4) {
+
+    
+    if (size > 0 && size <= capacity / 4 && capacity > 2) {
         resize(capacity / 2);
     }
-    return array[rear];
+
+    return result;
 }
 
 int Deque::get_front() const {
