@@ -1,7 +1,7 @@
 #ifndef HASHTABLE_HPP
 #define HASHTABLE_HPP
 
-#include "Fileblock.hpp"
+#include "FileBlock.hpp"
 
 class HashTable {
 private:

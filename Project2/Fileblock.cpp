@@ -1,4 +1,4 @@
-#include "Fileblock.hpp"
+#include "FileBlock.hpp"
 
 FileBlock::FileBlock() : id(0), checksum(0), next(nullptr) { // Default constructor
     clearPayload(); // Initialize payload to zero
@@ -25,7 +25,7 @@ void FileBlock::setPayload(const std::string& data) {
 int FileBlock::calculateChecksum() const {
     int sum = 0;
     for (int i = 0; i < 500; ++i) {
-        sum += static_cast<unsigned char>(payload[i]); // Calculate checksum
+        sum += static_cast<unsigned char>(payload[i]);  // Calculate sum of payload data
     }
     return sum % 256; // Return checksum
 }

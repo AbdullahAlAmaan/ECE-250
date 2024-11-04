@@ -36,7 +36,7 @@ public:
     // Validates the checksum of the payload
     bool validateChecksum() const;
 
-    void corrupt(const std::string& new_data);
+    void corrupt(const std::string& new_data); // Corrupts the payload data
 };
 
 #endif 

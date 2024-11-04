@@ -2,31 +2,31 @@
 #include <iostream>
 
 HashTable::HashTable(unsigned int size, bool openAddressing) : size(size), useOpenAddressing(openAddressing) {
-    table = new FileBlock*[size];
+    table = new FileBlock*[size]; // Allocate memory for the table
     for (unsigned int i = 0; i < size; ++i) {
-        table[i] = nullptr;
+        table[i] = nullptr; // Initialize all entries to nullptr
     }
 }
 
 HashTable::~HashTable() {
-    clearTable();
-    delete[] table;
+    clearTable(); 
+    delete[] table; // Deallocate memory for the table
 }
 
 void HashTable::clearTable() { // Clear table entries for re-initialization
-    for (unsigned int i = 0; i < size; ++i) {
-        FileBlock* current = table[i];
-        while (current != nullptr) {  
+    for (unsigned int i = 0; i < size; ++i) { 
+        FileBlock* current = table[i];   
+        while (current != nullptr) {   
             FileBlock* toDelete = current; 
             current = current->next; 
             delete toDelete;
         }
-        table[i] = nullptr;
+        table[i] = nullptr; 
     }
 }
 
 int HashTable::primaryHash(unsigned int key) const {
-    return key % size; // Simple modulo hash
+    return key % size; // Simple primary hash
 } 
 
 int HashTable::secondaryHash(unsigned int key) const {
@@ -47,12 +47,12 @@ bool HashTable::store(unsigned int id, const std::string& data) {
             }
         }
     } else { // Separate chaining
-        FileBlock* newBlock = new FileBlock(id, data);
+        FileBlock* newBlock = new FileBlock(id, data); // Create new block
         if (table[hash] == nullptr) { 
             table[hash] = newBlock; // Insert at the beginning
         } else {
-            FileBlock* current = table[hash];
-            FileBlock* prev = nullptr;
+            FileBlock* current = table[hash]; 
+            FileBlock* prev = nullptr; 
             while (current && current->getId() < id) {
                 prev = current;
                 current = current->next;
@@ -76,18 +76,18 @@ bool HashTable::store(unsigned int id, const std::string& data) {
 
 int HashTable::search(unsigned int id, FileBlock*& result) const {
     int hash = primaryHash(id);
-    if (useOpenAddressing) {
-        int step = secondaryHash(id);
-        for (int i = 0; i < size; ++i) { 
+    if (useOpenAddressing) { 
+        int step = secondaryHash(id); 
+        for (int i = 0; i < size; ++i) {  
             int index = (hash + i * step) % size; // Calculate index
             if (table[index] && table[index]->getId() == id) {   
                 result = table[index]; // Set result to the found block
-                return index;
+                return index; 
             }
         }
     } else { // Separate chaining
-        FileBlock* current = table[hash];
-        while (current) {
+        FileBlock* current = table[hash]; 
+        while (current) { 
             if (current->getId() == id) { 
                 result = current;
                 return hash;
@@ -100,35 +100,37 @@ int HashTable::search(unsigned int id, FileBlock*& result) const {
 }
 bool HashTable::remove(unsigned int id) {
     int hash = primaryHash(id);
+
     if (useOpenAddressing) {
         int step = secondaryHash(id);
         for (int i = 0; i < size; ++i) {
             int index = (hash + i * step) % size;
-            if (table[index] && table[index]->getId() == id) {
-                delete table[index];
-                table[index] = new FileBlock();
+            if (table[index] && table[index]->getId() == id) { 
+                delete table[index]; // Delete block
+                table[index] = nullptr; // Set to nullptr to avoid dangling pointer
                 return true;
             }
         }
     } else { // Separate chaining
-        FileBlock* current = table[hash];
-        FileBlock* prev = nullptr;
+        FileBlock* current = table[hash]; 
+        FileBlock* prev = nullptr;  
         while (current) {
-            if (current->getId() == id) { 
+            if (current->getId() == id) {
                 if (prev == nullptr) {
-                    table[hash] = current->next; // Remove the first element 
+                    table[hash] = current->next; // Remove from the beginning
                 } else {
                     prev->next = current->next; // Remove from the middle or end
                 }
-                delete current; // Delete the block
-                return true; 
+                delete current;
+                return true;
             }
-            prev = current; 
-            current = current->next; // Traverse the linked list
+            prev = current;
+            current = current->next;
         }
     }
     return false;
 }
+
 
 bool HashTable::corrupt(unsigned int id, const std::string& new_data) {
     FileBlock* block = nullptr;
@@ -151,8 +153,6 @@ std::string HashTable::validate(unsigned int id) const {
     return "failure";
 }
 
-
-// Now marked as const
 std::string HashTable::printChain(int index) const {
     if (table[index] == nullptr) {
         return "chain is empty";
@@ -160,7 +160,7 @@ std::string HashTable::printChain(int index) const {
     FileBlock* current = table[index]; 
     std::string result;
     while (current) {   
-        result += std::to_string(current->getId()) + " "; 
+        result += std::to_string(current->getId()) + " ";  
         current = current->next; 
     }
     return result;  

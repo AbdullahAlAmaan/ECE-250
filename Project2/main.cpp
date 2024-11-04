@@ -21,7 +21,7 @@ int main() {
             if (table && table->store(id, data)) {
                 std::cout << "success\n"; // Store the data in the hash table
             } else {
-                std::cout << "failure\n"; // Unable to store the data
+                std::cout << "failure\n"; 
             }
         } else if (command == "SEARCH") {
     unsigned int id;
